@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="create-table-autor" author="guilherme.nono">
+        <createTable tableName="AUTOR">
+            <column name="idAuthor" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_author" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-category" author="guilherme.nono">
+        <createTable tableName="CATEGORIA">
+            <column name="idCategory" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_category" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-course" author="guilherme.nono">
+        <createTable tableName="CURSO">
+            <column name="idCourse" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_course" nullable="false"/>
+            </column>
+            
+            <column name="name" type="varchar(45)">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="course_class" type="char(2)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-typepenality" author="guilherme.nono">
+        <createTable tableName="TIPOPENALIDADE">
+            <column name="idTypePenality" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_typePenality" nullable="false" />
+            </column>
+            
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="penality_value" type="decimal">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-book" author="guilherme.nono">
+        <createTable tableName="LIVRO">
+            <column name="idBook" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_book" nullable="false"/>
+            </column>
+            
+            <column name="name" type="varchar(50)" >
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="publisher" type="varchar(50)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="language" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="publication_date" type="date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="copies" type="integer">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="fk_categoria" type="integer">
+                <constraints foreignKeyName="fk_livro_categoria"
+                             referencedTableName="CATEGORIA"
+                             referencedColumnNames="idCategory"/>
+            </column>
+        </createTable>
+    </changeSet>
+    
+    <changeSet id="create-table-person" author="guilherme.nono">
+        <createTable tableName="PESSOA">
+            <column name="rmCpf" type="integer" >
+                <constraints primaryKey="true" primaryKeyName="pk_rmCpf" nullable="false"/>
+            </column>
+            
+            <column name="name" type="varchar(60)">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="joined_date" type="date">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="fk_curso" type="integer">
+                <constraints foreignKeyName="fk_pessoa_curso"
+                             referencedTableName="CURSO"
+                             referencedColumnNames="idCourse" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-loan" author="guilherme.nono">
+        <createTable tableName="EMPRESTIMO">
+            <column name="idLoan" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_loan" nullable="false"/>
+            </column>
+            
+            <column name="loan_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="renewal_date" type="date" defaultValue="2022-09-09">
+                <constraints nullable="false"/>
+            </column>
+            
+            <column name="returned_date" type="date" defaultValue="2022-09-09">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="fk_livro" type="integer">
+                <constraints foreignKeyName="fk_emprestimo_livro" 
+                             referencedTableName="LIVRO"
+                             referencedColumnNames="idBook" />
+            </column>
+            
+            <column name="fk_pessoa" type="integer">
+                <constraints foreignKeyName="fk_emprestimo_pessoa"
+                             referencedTableName="PESSOA"
+                             referencedColumnNames="rmCpf" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-penality" author="guilherme.nono">
+        <createTable tableName="PENALIDADE">
+            <column name="idPenality" type="integer" autoIncrement="true">
+                <constraints primaryKey="true" 
+                             primaryKeyName="pk_penality" 
+                             nullable="false"/>
+            </column>
+            
+            <column name="penality_date" type="date">
+                <constraints nullable="false" />
+            </column>
+
+            <column name="fk_pessoa" type="integer">
+                <constraints foreignKeyName="fk_penalidade_pessoa"
+                             referencedTableName="PESSOA"
+                             referencedColumnNames="rmCpf" />
+            </column>
+            
+            <column name="fk_emprestimo" type="integer">
+                <constraints foreignKeyName="fk_penalidade_emprestimo"
+                             referencedTableName="EMPRESTIMO"
+                             referencedColumnNames="idLoan" />
+            </column>
+            
+            <column name="fk_tipopenalidade" type="integer">
+                <constraints foreignKeyName="fk_penalidade_tipopenalidade"
+                             referencedTableName="TIPOPENALIDADE"
+                             referencedColumnNames="idTypePenality" />
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-bookauthor" author="guilherme.nono">
+        <createTable tableName="LIVROAUTOR">
+            <column name="fk_livro" type="integer">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_livro_autor"
+                             nullable="false"
+                             foreignKeyName="fk_liv_livro_autor"
+                             referencedTableName="LIVRO"
+                             referencedColumnNames="idBook"/>
+            </column>
+
+            <column name="fk_autor" type="integer">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_livro_autor"
+                             nullable="false"
+                             foreignKeyName="fk_aut_livro_autor"
+                             referencedTableName="AUTOR"
+                             referencedColumnNames="idAuthor"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-bookcategory" author="guilherme.nono">
+        <createTable tableName="LIVROCATEGORIA">
+            <column name="fk_livro" type="integer">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_livro_categoria"
+                             nullable="false"
+                             foreignKeyName="fk_liv_livro_categoria"
+                             referencedTableName="LIVRO"
+                             referencedColumnNames="idBook"/>
+            </column>
+
+            <column name="fk_categoria" type="integer">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_livro_categoria"
+                             nullable="false"
+                             foreignKeyName="fk_cat_livro_categoria"
+                             referencedTableName="CATEGORIA"
+                             referencedColumnNames="idCategory"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-coursepeople" author="guilherme.nono">
+        <createTable tableName="CURSOPESSOA">
+            <column name="fk_curso" type="integer">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_curso_pessoa"
+                             nullable="false"
+                             foreignKeyName="fk_cur_curso_pessoa"
+                             referencedTableName="CURSO"
+                             referencedColumnNames="idCourse"/>
+            </column>
+
+            <column name="fk_pessoa" type="integer">
+                <constraints primaryKey="true"
+                             primaryKeyName="pk_curso_pessoa"
+                             nullable="false"
+                             foreignKeyName="fk_pes_curso_pessoa"
+                             referencedTableName="PESSOA"
+                             referencedColumnNames="rmCpf"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
